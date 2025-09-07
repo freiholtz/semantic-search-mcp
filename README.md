@@ -1,4 +1,4 @@
-# Semantic Search MCP
+# 🔮 Semantic Search MCP
 
 Add semantic code search to any AI agent (Claude Code, Cursor, etc.). Search your codebase with natural language instead of exact keywords.
 
@@ -45,18 +45,18 @@ claude mcp add semantic-search --env WORKSPACE_PATH="/path/to/your/project" -- u
 
 ## Usage
 
-Now search your code with natural language:
+Once installed, your AI agent will **automatically use** semantic search when you ask code questions:
 
 ```bash
-@semantic_search "user authentication logic"
-@semantic_search "database connection setup"
-@semantic_search "error handling patterns"
+# Just talk naturally to your agent:
+"How does user authentication work in this codebase?"
+"Show me the database connection logic"  
+"Find error handling patterns in the code"
 ```
 
-**Tips:**
-- Use **descriptive phrases** not single words
-- For exact matches (like "MyClass"), use Grep tool instead
-- Each project gets its own search collection
+The agent learns from the MCP tool description to use semantic search for conceptual queries and Grep for exact matches. **No special commands needed** - just ask naturally!
+
+**Manual override:** If you want to force the agent to use semantic search, you can mention it: *"Use semantic search to find..."*
 
 ## Multiple Projects
 
@@ -92,4 +92,7 @@ Creates: `@semantic_search_main` and `@semantic_search_lib`
 
 Built with UV, ChromaDB, Pydantic v2, and the official MCP SDK.
 
-Ready for production! 🚀
+## License
+
+Free to use and modify for any purpose. If you find this useful, please credit David Freiholtz for the original implementation.
+
