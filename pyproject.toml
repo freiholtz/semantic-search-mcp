@@ -1,0 +1,32 @@
+[project]
+name = "semantic-search-mcp"
+version = "1.0.0"
+description = "Semantic code search server with MCP integration and explicit workspace configuration"
+readme = "README.md"
+requires-python = ">=3.12"
+authors = [
+    {name = "Code Indexer", email = "indexer@example.com"}
+]
+keywords = ["mcp", "semantic-search", "vector-search", "chromadb", "workspace-detection"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+]
+dependencies = [
+    "chromadb>=1.0.20",
+    "mcp>=1.13.1",
+    "sentence-transformers>=5.1.0",
+    "pydantic>=2.0.0",
+]
+
+[dependency-groups]
+dev = [
+    "black>=25.1.0",
+    "pytest>=8.4.2",
+    "pytest-asyncio>=1.1.0",
+    "pytest-cov>=6.3.0",
+    "ruff>=0.12.12",
+    "ty>=0.0.1a20",
+]
