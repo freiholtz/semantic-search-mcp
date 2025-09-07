@@ -87,14 +87,27 @@ The agent learns from the MCP tool description to use semantic search for concep
 
 ## Multiple Projects
 
-To search multiple codebases, add each with a different name:
+This MCP tool naturally handles multiple projects in two powerful ways:
+
+### 1. Search Multiple Repositories
+Add semantic search for different codebases using unique names:
 
 ```bash
-claude mcp add semantic-search-main --env WORKSPACE_PATH="/path/to/main/project" -- uv run --directory /path/to/semantic-search-mcp scripts/run_server.py
-claude mcp add semantic-search-lib --env WORKSPACE_PATH="/path/to/library" -- uv run --directory /path/to/semantic-search-mcp scripts/run_server.py
+claude mcp add semantic-search-main --env WORKSPACE_PATH="/path/to/main-project" -- uv run --directory /path/to/semantic-search-mcp scripts/run_server.py
+claude mcp add semantic-search-notes --env WORKSPACE_PATH="/path/to/dev-notes" -- uv run --directory /path/to/semantic-search-mcp scripts/run_server.py
 ```
 
-Creates: `@semantic_search_main` and `@semantic_search_lib`
+Creates: `@semantic_search_main` and `@semantic_search_notes` tools
+
+### 2. Enhanced Development Workflow
+One agent can benefit from multiple semantic searches simultaneously:
+
+**Example scenario:** Working on your main project but also having access to:
+- **Your developer notes repository** - General technical solutions and patterns
+- **Related codebases** - Libraries or services that integrate with your main project
+- **Documentation repos** - Internal wikis or technical guides
+
+Even when you've added multiple repositories to Claude Code's workspace, you still need semantic search to intelligently find connections and patterns across them. Traditional grep/find can't understand conceptual relationships between codebases.
 
 ## Management
 
