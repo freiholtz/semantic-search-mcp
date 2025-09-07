@@ -81,6 +81,37 @@ class IndexingConfig(BaseModel):
         return validated
 
 
+class ChromaDBConfig(BaseModel):
+    """Configuration for ChromaDB connection."""
+    
+    model_config = ConfigDict(
+        frozen=True,
+        validate_assignment=True
+    )
+    
+    database_path: Path = Field(
+        default=Path("./chroma_db"),
+        description="Path to ChromaDB storage directory"
+    )
+    
+    anonymized_telemetry: bool = Field(
+        default=False,
+        description="Whether to enable ChromaDB telemetry"
+    )
+    
+    similarity_metric: str = Field(
+        default="cosine",
+        description="Similarity metric for vector search"
+    )
+    
+    @field_validator('database_path')
+    @classmethod
+    def ensure_path_exists(cls, v: Path) -> Path:
+        """Ensure database directory exists."""
+        v.mkdir(parents=True, exist_ok=True)
+        return v
+
+
 class SemanticSearchConfig(BaseSettings):
     """Main configuration for semantic search MCP server."""
     
@@ -96,6 +127,11 @@ class SemanticSearchConfig(BaseSettings):
     indexing: IndexingConfig = Field(
         default_factory=IndexingConfig,
         description="Indexing behavior configuration"
+    )
+    
+    chromadb: ChromaDBConfig = Field(
+        default_factory=ChromaDBConfig,
+        description="ChromaDB connection configuration"
     )
     
     @field_validator('workspace_path')
@@ -151,3 +187,8 @@ def get_max_file_size() -> int:
 def get_modification_check_interval() -> int:
     """Get modification check interval from config."""
     return get_config().indexing.modification_check_interval
+
+
+def get_chromadb_config() -> ChromaDBConfig:
+    """Get ChromaDB configuration from config.""" 
+    return get_config().chromadb

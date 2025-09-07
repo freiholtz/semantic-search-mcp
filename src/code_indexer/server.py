@@ -24,7 +24,8 @@ from .config import (
     get_allowed_extensions,
     get_ignore_patterns, 
     get_max_file_size,
-    get_modification_check_interval
+    get_modification_check_interval,
+    get_chromadb_config
 )
 
 # Set up logging
@@ -189,11 +190,12 @@ def get_chroma_client() -> chromadb.ClientAPI:
     """Get or create global persistent ChromaDB client."""
     global _chroma_client
     if _chroma_client is None:
+        chroma_config = get_chromadb_config()
         _chroma_client = chromadb.PersistentClient(
-            path="./chroma_db",
-            settings=ChromaSettings(anonymized_telemetry=False)
+            path=str(chroma_config.database_path),
+            settings=ChromaSettings(anonymized_telemetry=chroma_config.anonymized_telemetry)
         )
-        logger.info("📚 Created persistent ChromaDB client")
+        logger.info(f"📚 Created persistent ChromaDB client at {chroma_config.database_path}")
     return _chroma_client
 
 
