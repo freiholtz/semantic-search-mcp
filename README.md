@@ -1,6 +1,6 @@
 # 🔮 Semantic Search MCP
 
-Add semantic code search to any AI agent (Claude Code, Cursor, etc.). Search your codebase with natural language instead of exact keywords.
+Semantic code search MCP tool for any AI agents. Gives Claude Code the intelligent search capabilities that Cursor IDE users love.
 
 **Why this exists:** Cursor IDE has excellent semantic code search that makes AI agents much more effective. Claude Code uses only traditional search (find/grep), missing contextual connections. This tool brings Cursor-like semantic search capabilities to Claude Code and other AI agents.
 
@@ -13,6 +13,8 @@ Add semantic code search to any AI agent (Claude Code, Cursor, etc.). Search you
 2. Add a working directory path and get the MCP configuration
 3. Add the MCP to your coding agent
 4. Now you have semantic search. 🎉
+
+![Semantic Search MCP](media/semantic-search-mcp.jpg)
 
 ## Prerequisites
 
@@ -113,7 +115,7 @@ Creates: `@semantic_search_main` and `@semantic_search_lib`
 - **File types**: Programming languages, docs (.md, .txt, .csv), configs
 - **Performance**: ChromaDB with cosine similarity, sentence-transformers
 
-Built with UV, ChromaDB, and the official MCP SDK.
+Built with UV, ChromaDB, Pydantic v2, and the official MCP SDK.
 
 ## Development
 
