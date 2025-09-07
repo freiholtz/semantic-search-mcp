@@ -2,6 +2,8 @@
 
 Semantic code search MCP tool for any AI agents. Gives Claude Code the intelligent search capabilities that Cursor IDE users love.
 
+**📖 [Read the full story](https://davidfreiholtz.com/posts/semantic-search-mcp-server/)** - How this bridges the Claude Code vs Cursor search capability gap
+
 **Why this exists:** Cursor IDE has excellent semantic code search that makes AI agents much more effective. Claude Code uses only traditional search (find/grep), missing contextual connections. This tool brings Cursor-like semantic search capabilities to Claude Code and other AI agents.
 
 **🔒 Completely local** - No API keys, no data leaves your computer  
