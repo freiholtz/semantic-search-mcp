@@ -10,7 +10,7 @@ class IndexingConfig(BaseModel):
     """Configuration for indexing behavior."""
     
     model_config = ConfigDict(
-        frozen=True,  # Immutable configuration
+        frozen=True,
         validate_assignment=True,
         str_strip_whitespace=True
     )
@@ -23,7 +23,7 @@ class IndexingConfig(BaseModel):
     
     modification_check_interval: int = Field(
         default=300,  # 5 minutes
-        ge=60,  # Minimum 1 minute
+        ge=60,
         description="How often to check for file modifications in seconds"
     )
     
@@ -81,48 +81,10 @@ class IndexingConfig(BaseModel):
         return validated
 
 
-class ChromaDBConfig(BaseModel):
-    """Configuration for ChromaDB connection."""
-    
-    model_config = ConfigDict(
-        frozen=True,
-        validate_assignment=True
-    )
-    
-    database_path: Path = Field(
-        default=Path("./chroma_db"),
-        description="Path to ChromaDB storage directory"
-    )
-    
-    anonymized_telemetry: bool = Field(
-        default=False,
-        description="Whether to enable ChromaDB telemetry"
-    )
-    
-    embedding_model: str = Field(
-        default="all-MiniLM-L6-v2",
-        min_length=1,
-        description="Sentence transformer model for embeddings"
-    )
-    
-    similarity_metric: str = Field(
-        default="cosine",
-        description="Similarity metric for vector search"
-    )
-    
-    @field_validator('database_path')
-    @classmethod
-    def ensure_path_exists(cls, v: Path) -> Path:
-        """Ensure database directory exists."""
-        v.mkdir(parents=True, exist_ok=True)
-        return v
-
-
 class SemanticSearchConfig(BaseSettings):
     """Main configuration for semantic search MCP server."""
     
     model_config = SettingsConfigDict(
-        env_prefix="SEMANTIC_SEARCH_",
         case_sensitive=False,
         validate_assignment=True
     )
@@ -134,11 +96,6 @@ class SemanticSearchConfig(BaseSettings):
     indexing: IndexingConfig = Field(
         default_factory=IndexingConfig,
         description="Indexing behavior configuration"
-    )
-    
-    chromadb: ChromaDBConfig = Field(
-        default_factory=ChromaDBConfig,
-        description="ChromaDB connection configuration"
     )
     
     @field_validator('workspace_path')
@@ -174,3 +131,23 @@ def get_config() -> SemanticSearchConfig:
         config = SemanticSearchConfig(workspace_path=workspace_path)
     
     return config
+
+
+def get_allowed_extensions() -> Set[str]:
+    """Get allowed file extensions from config."""
+    return get_config().indexing.allowed_extensions
+
+
+def get_ignore_patterns() -> Set[str]:
+    """Get ignore patterns from config."""
+    return get_config().indexing.ignore_patterns
+
+
+def get_max_file_size() -> int:
+    """Get maximum file size from config."""
+    return get_config().indexing.max_file_size
+
+
+def get_modification_check_interval() -> int:
+    """Get modification check interval from config."""
+    return get_config().indexing.modification_check_interval

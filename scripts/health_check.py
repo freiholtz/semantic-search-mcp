@@ -12,22 +12,22 @@ def test_imports():
     print("🧪 Testing imports...")
     
     try:
-        from mcp.server import Server
-        from mcp.types import Tool, TextContent
+        from mcp.server import Server  # noqa: F401
+        from mcp.types import Tool, TextContent  # noqa: F401
         print("  ✅ MCP imports working")
     except ImportError as e:
         print(f"  ❌ MCP import failed: {e}")
         return False
     
     try:
-        import chromadb
+        import chromadb  # noqa: F401
         print("  ✅ ChromaDB import working")
     except ImportError as e:
         print(f"  ❌ ChromaDB import failed: {e}")
         return False
     
     try:
-        import sentence_transformers
+        import sentence_transformers  # noqa: F401
         print("  ✅ Sentence transformers import working")
     except ImportError as e:
         print(f"  ❌ Sentence transformers import failed: {e}")
@@ -45,12 +45,12 @@ def test_mcp_server():
         
         # Test basic MCP objects
         from mcp.types import Tool, TextContent
-        tool = Tool(
+        Tool(
             name="test",
-            description="Test tool",
+            description="Test tool", 
             inputSchema={"type": "object", "properties": {}}
         )
-        content = TextContent(type="text", text="Test")
+        TextContent(type="text", text="Test")
         print("  ✅ Basic MCP objects work")
         
         return True
@@ -81,7 +81,7 @@ def test_chromadb():
         )
         print("  ✅ Document added")
         
-        results = collection.query(
+        collection.query(
             query_texts=["Hello"],
             n_results=1
         )

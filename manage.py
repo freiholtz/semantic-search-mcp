@@ -11,11 +11,14 @@ from datetime import datetime
 # Import shared utilities
 sys.path.insert(0, str(Path(__file__).parent / "src"))
 from code_indexer.utils import (
-    get_allowed_extensions,
-    get_ignore_patterns, 
     should_ignore_path,
     generate_collection_name,
     is_file_indexable
+)
+from code_indexer.config import (
+    get_allowed_extensions,
+    get_ignore_patterns,
+    get_max_file_size
 )
 
 
@@ -166,7 +169,7 @@ def investigate_workspace(workspace_path):
         print("📊 Scanning files...")
         
         for file_path in workspace_dir.rglob("*"):
-            indexable, reason = is_file_indexable(file_path, allowed_extensions, ignore_patterns)
+            indexable, reason = is_file_indexable(file_path, allowed_extensions, ignore_patterns, get_max_file_size())
             if not indexable:
                 if "file too large" in reason:
                     skipped_large += 1

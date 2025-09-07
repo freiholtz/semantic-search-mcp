@@ -6,51 +6,6 @@ from pathlib import Path
 from typing import Set, Tuple, Dict, Any, Optional
 
 
-# Constants
-MAX_FILE_SIZE = 1024 * 1024  # 1MB
-MODIFICATION_CHECK_INTERVAL = 300  # 5 minutes in seconds
-
-
-def get_allowed_extensions() -> Set[str]:
-    """Get the allowlist of safe file extensions to index."""
-    return {
-        # Programming languages
-        '.py', '.js', '.ts', '.jsx', '.tsx', '.java', '.cpp', '.c', '.h', '.hpp', 
-        '.go', '.rs', '.rb', '.php', '.swift', '.kt', '.scala', '.cs', '.fs',
-        '.sh', '.bash', '.zsh', '.fish', '.ps1', '.bat', '.cmd',
-        # Web technologies  
-        '.html', '.htm', '.css', '.scss', '.sass', '.less',
-        # Data formats
-        '.json', '.yaml', '.yml', '.toml', '.xml', '.csv', '.tsv',
-        # Documentation
-        '.md', '.rst', '.txt', '.adoc',
-        # Configuration
-        '.ini', '.conf', '.cfg', '.env.example', '.gitignore', '.editorconfig'
-    }
-
-
-def get_ignore_patterns() -> Set[str]:
-    """Get comprehensive ignore patterns for directories and files."""
-    return {
-        # Virtual environments
-        'venv', '.venv', 'env', '.env', 'virtualenv',
-        # Package managers
-        'node_modules', '__pycache__', '.pytest_cache',
-        # Version control
-        '.git', '.svn', '.hg',
-        # Build artifacts  
-        'build', 'dist', 'target', '.next', '.nuxt',
-        # IDE/editor files
-        '.vscode', '.idea', '*.swp', '*.swo',
-        # Cache directories
-        'cache', '.cache', '.npm', '.yarn',
-        # Static files (Django)
-        'staticfiles', 'static/admin', 'collectstatic',
-        # Logs
-        '*.log', 'logs',
-        # Temporary files
-        'tmp', 'temp', '.tmp'
-    }
 
 
 def should_ignore_path(file_path: Path, ignore_patterns: Set[str]) -> bool:
@@ -88,7 +43,7 @@ def generate_collection_name(workspace_path: str) -> str:
     return f"{clean_name}_{path_hash}"
 
 
-def is_file_indexable(file_path: Path, allowed_extensions: Set[str], ignore_patterns: Set[str]) -> Tuple[bool, str]:
+def is_file_indexable(file_path: Path, allowed_extensions: Set[str], ignore_patterns: Set[str], max_file_size: int) -> Tuple[bool, str]:
     """Check if file should be indexed and return reason if not.
     
     Returns:
@@ -105,8 +60,8 @@ def is_file_indexable(file_path: Path, allowed_extensions: Set[str], ignore_patt
     
     try:
         file_size = file_path.stat().st_size
-        if file_size > MAX_FILE_SIZE:
-            return False, f"file too large ({file_size/1024/1024:.1f}MB > 1MB)"
+        if file_size > max_file_size:
+            return False, f"file too large ({file_size/1024/1024:.1f}MB > {max_file_size/1024/1024:.0f}MB)"
     except Exception as e:
         return False, f"stat error: {e}"
     

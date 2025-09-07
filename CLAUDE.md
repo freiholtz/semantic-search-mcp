@@ -19,7 +19,6 @@ This is Semantic Search MCP - a modern Python-based semantic code search server 
 - **UV**: Lightning-fast Python package management (10-100x faster than pip)
 - **Official MCP SDK**: Stable server implementation (replaces buggy FastMCP 0.4.1)
 - **ChromaDB 2025**: Rust-core performance improvements for 4x speed boost
-- **Pydantic v2**: Configuration management with validation and type safety
 - **Modern Python**: Type checking with `ty`, formatting with `black`, linting with `ruff`
 
 ## Tool Usage Instructions
@@ -58,10 +57,11 @@ WORKSPACE_PATH=/path/to/test/project uv run scripts/run_server.py
 
 # Individual checks
 uv run ty check                     # Type checking
-uv run black --check src/ scripts/ manage.py  # Formatting
 uv run ruff check src/ scripts/ manage.py      # Linting
-uv run pytest -v                   # Tests
+uv run scripts/health_check.py     # Component verification
 ```
+
+**IMPORTANT**: Always run `./check.sh` before committing any changes to ensure code quality standards are maintained.
 
 ### MCP Server Configuration
 

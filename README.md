@@ -113,16 +113,17 @@ Creates: `@semantic_search_main` and `@semantic_search_lib`
 - **File types**: Programming languages, docs (.md, .txt, .csv), configs
 - **Performance**: ChromaDB with cosine similarity, sentence-transformers
 
-Built with UV, ChromaDB, Pydantic v2, and the official MCP SDK.
+Built with UV, ChromaDB, and the official MCP SDK.
 
 ## Development
 
-**Code quality checks:**
+**Setup for contributors:**
 ```bash
-./check.sh  # Run all checks (type, format, lint, test)
+uv sync --dev  # Install dev dependencies (ruff, ty, black, etc.)
+./check.sh     # Run all checks (type, format, lint, test)
 ```
 
-Run this before submitting changes to ensure code quality standards.
+Run `./check.sh` before submitting changes to ensure code quality standards.
 
 ## License
 

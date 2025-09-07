@@ -15,13 +15,16 @@ import chromadb
 from chromadb.config import Settings as ChromaSettings
 
 from .utils import (
-    get_allowed_extensions, 
-    get_ignore_patterns,
     generate_collection_name,
     is_file_indexable,
     create_chunk_metadata,
-    generate_chunk_id,
-    MODIFICATION_CHECK_INTERVAL
+    generate_chunk_id
+)
+from .config import (
+    get_allowed_extensions,
+    get_ignore_patterns, 
+    get_max_file_size,
+    get_modification_check_interval
 )
 
 # Set up logging
@@ -219,7 +222,7 @@ async def handle_index_directory(directory_path: str, collection_name: str) -> s
         chunks_added = 0
         
         for file_path in dir_path.rglob("*"):
-            indexable, reason = is_file_indexable(file_path, allowed_extensions, ignore_patterns)
+            indexable, reason = is_file_indexable(file_path, allowed_extensions, ignore_patterns, get_max_file_size())
             if not indexable:
                 if "file too large" in reason:
                     logger.warning(f"Skipping file: {file_path} - {reason}")
@@ -297,7 +300,7 @@ def _should_check_modifications(collection_name: str) -> bool:
     current_time = time.time()
     last_check_time = _last_modification_check.get(collection_name, 0)
     
-    if current_time - last_check_time < MODIFICATION_CHECK_INTERVAL:
+    if current_time - last_check_time < get_modification_check_interval():
         logger.debug(f"Skipping modification check for '{collection_name}' (checked {(current_time - last_check_time)/60:.1f} minutes ago)")
         return False
     return True
