@@ -21,7 +21,6 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 git clone <this-repo>
 cd semantic-search-mcp
 uv sync
-./check.sh  # Verify everything works
 ```
 
 **2. Add a project for searching:**
@@ -29,11 +28,11 @@ uv sync
 # Start the management tool
 uv run manage.py
 
-# In the tool, analyze your project first:
-> investigate /path/to/your/project
-
-# If the analysis looks good, add it:
+# Add your project (automatically analyzes first):
 > add /path/to/your/project
+
+# It will show you what files will be indexed and ask for confirmation.
+# This is useful to verify the file count matches your expectations.
 
 # Get the configuration for your AI agent:  
 > json 1
@@ -77,15 +76,13 @@ Creates: `@semantic_search_main` and `@semantic_search_lib`
 ## Management
 
 **Workspace commands:**
-- `investigate <path>` - Analyze project size before indexing
-- `add <path>` - Index a project with progress tracking
+- `add <path>` - Analyze and index project (shows preview, asks confirmation)
+- `investigate <path>` - Analyze project without indexing (for planning)
 - `json <nr>` - Get configuration for existing collection
 
 **Collection commands:**  
 - `info <nr>` - View collection details
 - `delete <nr>` - Remove collection
-
-**For large projects:** Always use `investigate` first to see estimated size and time.
 
 ## Technical Info
 
@@ -96,6 +93,15 @@ Creates: `@semantic_search_main` and `@semantic_search_lib`
 - **Performance**: ChromaDB with cosine similarity, sentence-transformers
 
 Built with UV, ChromaDB, Pydantic v2, and the official MCP SDK.
+
+## Development
+
+**Code quality checks:**
+```bash
+./check.sh  # Run all checks (type, format, lint, test)
+```
+
+Run this before submitting changes to ensure code quality standards.
 
 ## License
 
