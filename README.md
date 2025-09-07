@@ -7,6 +7,13 @@ Add semantic code search to any AI agent (Claude Code, Cursor, etc.). Search you
 **🔒 Completely local** - No API keys, no data leaves your computer  
 **⚡ No server required** - Pre-indexed collections, updates on-demand
 
+## TLDR
+
+1. Clone this repo  
+2. Add a working directory path and get the MCP configuration
+3. Add the MCP to your coding agent
+4. Now you have semantic search. 🎉
+
 ## Prerequisites
 
 **Install UV** (Python package manager):
