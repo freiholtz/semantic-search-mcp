@@ -2,6 +2,8 @@
 
 Add semantic code search to any AI agent (Claude Code, Cursor, etc.). Search your codebase with natural language instead of exact keywords.
 
+**Why this exists:** Cursor IDE has excellent semantic code search that makes AI agents much more effective. Claude Code uses only traditional search (find/grep), missing contextual connections. This tool brings Cursor-like semantic search capabilities to Claude Code and other AI agents.
+
 **🔒 Completely local** - No API keys, no data leaves your computer  
 **⚡ No server required** - Pre-indexed collections, updates on-demand
 
