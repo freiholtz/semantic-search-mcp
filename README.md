@@ -40,11 +40,25 @@ uv run manage.py
 
 **3. Add to your AI agent:**
 
-Copy the JSON configuration from step 2 into your Claude Code (or other AI agent):
-
+**For Claude Code:**
 ```bash
-# The management tool gives you this command:
+# Use the command from the management tool:
 claude mcp add semantic-search --env WORKSPACE_PATH="/path/to/your/project" -- uv run --directory /path/to/semantic-search-mcp scripts/run_server.py
+```
+
+**For other MCP clients:**
+```json
+{
+  "mcpServers": {
+    "semantic-search": {
+      "command": "uv",
+      "args": ["run", "--directory", "/path/to/semantic-search-mcp", "scripts/run_server.py"],
+      "env": {
+        "WORKSPACE_PATH": "/path/to/your/project"
+      }
+    }
+  }
+}
 ```
 
 ## Usage
