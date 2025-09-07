@@ -2,6 +2,9 @@
 
 Add semantic code search to any AI agent (Claude Code, Cursor, etc.). Search your codebase with natural language instead of exact keywords.
 
+**🔒 Completely local** - No API keys, no data leaves your computer  
+**⚡ No server required** - Pre-indexed collections, updates on-demand
+
 ## Prerequisites
 
 **Install UV** (Python package manager):
