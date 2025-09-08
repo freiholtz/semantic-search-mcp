@@ -169,19 +169,42 @@ def get_config() -> SemanticSearchConfig:
     return config
 
 
+# Default configuration instances for standalone use
+def get_default_indexing_config() -> IndexingConfig:
+    """Get default indexing configuration without requiring WORKSPACE_PATH."""
+    return IndexingConfig()
+
+
+def get_default_chromadb_config() -> ChromaDBConfig:
+    """Get default ChromaDB configuration without requiring WORKSPACE_PATH."""
+    return ChromaDBConfig()
+
+
 def get_allowed_extensions() -> Set[str]:
-    """Get allowed file extensions from config."""
-    return get_config().indexing.allowed_extensions
+    """Get allowed file extensions from config, or defaults if WORKSPACE_PATH not available."""
+    try:
+        return get_config().indexing.allowed_extensions
+    except ValueError:
+        # WORKSPACE_PATH not set, use defaults for management tool
+        return get_default_indexing_config().allowed_extensions
 
 
 def get_ignore_patterns() -> Set[str]:
-    """Get ignore patterns from config."""
-    return get_config().indexing.ignore_patterns
+    """Get ignore patterns from config, or defaults if WORKSPACE_PATH not available."""
+    try:
+        return get_config().indexing.ignore_patterns
+    except ValueError:
+        # WORKSPACE_PATH not set, use defaults for management tool
+        return get_default_indexing_config().ignore_patterns
 
 
 def get_max_file_size() -> int:
-    """Get maximum file size from config."""
-    return get_config().indexing.max_file_size
+    """Get maximum file size from config, or defaults if WORKSPACE_PATH not available."""
+    try:
+        return get_config().indexing.max_file_size
+    except ValueError:
+        # WORKSPACE_PATH not set, use defaults for management tool
+        return get_default_indexing_config().max_file_size
 
 
 def get_modification_check_interval() -> int:
@@ -190,5 +213,9 @@ def get_modification_check_interval() -> int:
 
 
 def get_chromadb_config() -> ChromaDBConfig:
-    """Get ChromaDB configuration from config.""" 
-    return get_config().chromadb
+    """Get ChromaDB configuration from config, or defaults if WORKSPACE_PATH not available.""" 
+    try:
+        return get_config().chromadb
+    except ValueError:
+        # WORKSPACE_PATH not set, use defaults for management tool
+        return get_default_chromadb_config()

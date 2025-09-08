@@ -38,6 +38,8 @@ This is Semantic Search MCP - a modern Python-based semantic code search server 
 
 ## Development Commands
 
+**IMPORTANT**: Always use `uv run` for all Python command execution instead of `python3` or `python`. This ensures proper virtual environment and dependency management.
+
 ### Setup
 ```bash
 # Initialize development environment
