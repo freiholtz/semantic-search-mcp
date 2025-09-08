@@ -40,6 +40,8 @@ This is Semantic Search MCP - a modern Python-based semantic code search server 
 
 **IMPORTANT**: Always use `uv run` for all Python command execution instead of `python3` or `python`. This ensures proper virtual environment and dependency management.
 
+**Rate Limiting Configuration**: File modification checking defaults to 0 minutes (check every search for instant updates). Set to any positive number N to check every N minutes for better performance on large codebases.
+
 ### Setup
 ```bash
 # Initialize development environment

@@ -17,7 +17,12 @@ def should_ignore_path(file_path: Path, ignore_patterns: Set[str]) -> bool:
     path_str = str(file_path).lower()
     
     for pattern in ignore_patterns:
-        if pattern.startswith('*'):
+        if pattern == '.*':
+            # Special case: ignore any directory starting with dot
+            for part in path_parts:
+                if part.startswith('.') and len(part) > 1:  # Exclude '.' and '..' 
+                    return True
+        elif pattern.startswith('*'):
             # Wildcard pattern
             if path_str.endswith(pattern[1:]):
                 return True

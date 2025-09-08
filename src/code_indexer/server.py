@@ -286,12 +286,13 @@ async def check_and_update_collection(collection, collection_name: str) -> None:
             logger.warning("Could not determine workspace directory from metadata")
             return
         
-        # Find modified and deleted files
+        # Find new, modified, and deleted files
+        new_files = _find_new_files(all_metadata, workspace_dir)
         files_to_reindex = _find_modified_files(all_metadata)
         deleted_files = _find_deleted_files(all_metadata, workspace_dir)
         
         # Process updates
-        await _process_file_updates(collection, files_to_reindex, deleted_files, workspace_dir, collection_name)
+        await _process_file_updates(collection, files_to_reindex, new_files, deleted_files, workspace_dir, collection_name)
         
     except Exception as e:
         logger.warning(f"File check error: {e}")
@@ -299,12 +300,21 @@ async def check_and_update_collection(collection, collection_name: str) -> None:
 
 def _should_check_modifications(collection_name: str) -> bool:
     """Check if modification check is needed based on rate limiting."""
+    check_interval_minutes = get_modification_check_interval()
+    
+    # If interval is 0, always check (no rate limiting)
+    if check_interval_minutes == 0:
+        return True
+    
+    # Otherwise, apply rate limiting based on interval in minutes
     current_time = time.time()
     last_check_time = _last_modification_check.get(collection_name, 0)
+    interval_seconds = check_interval_minutes * 60  # Convert minutes to seconds
     
-    if current_time - last_check_time < get_modification_check_interval():
-        logger.debug(f"Skipping modification check for '{collection_name}' (checked {(current_time - last_check_time)/60:.1f} minutes ago)")
+    if current_time - last_check_time < interval_seconds:
+        logger.debug(f"Skipping modification check for '{collection_name}' (checked {(current_time - last_check_time)/60:.1f} minutes ago, interval: {check_interval_minutes}m)")
         return False
+    
     return True
 
 
@@ -356,9 +366,49 @@ def _find_deleted_files(metadata_list: List[Dict[str, Any]], workspace_dir: Path
     return deleted_files
 
 
-async def _process_file_updates(collection, files_to_reindex: List[Path], deleted_files: List[str], 
-                               workspace_dir: Path, collection_name: str) -> None:
-    """Process file modifications and deletions."""
+def _find_new_files(metadata_list: List[Dict[str, Any]], workspace_dir: Path) -> List[Path]:
+    """Find files that have been added to workspace since indexing."""
+    from code_indexer.utils import is_file_indexable
+    from code_indexer.config import get_allowed_extensions, get_ignore_patterns, get_max_file_size
+    
+    # Get files already indexed
+    indexed_files = set()
+    for metadata in metadata_list:
+        if metadata and metadata.get('file_path'):
+            indexed_files.add(metadata['file_path'])
+    
+    # Find all indexable files in workspace
+    allowed_extensions = get_allowed_extensions()
+    ignore_patterns = get_ignore_patterns()
+    max_file_size = get_max_file_size()
+    
+    new_files = []
+    for file_path in workspace_dir.rglob("*"):
+        if file_path.is_file():
+            rel_path = str(file_path.relative_to(workspace_dir))
+            
+            # Skip if already indexed
+            if rel_path in indexed_files:
+                continue
+            
+            # Check if file is indexable
+            indexable, reason = is_file_indexable(file_path, allowed_extensions, ignore_patterns, max_file_size)
+            if indexable:
+                logger.info(f"📂 New file found: {file_path}")
+                new_files.append(file_path)
+    
+    return new_files
+
+
+async def _process_file_updates(collection, files_to_reindex: List[Path], new_files: List[Path], 
+                               deleted_files: List[str], workspace_dir: Path, collection_name: str) -> None:
+    """Process file modifications, new files, and deletions."""
+    # Index new files
+    if new_files:
+        logger.info(f"📂 Indexing {len(new_files)} new files")
+        for file_path in new_files:
+            await reindex_single_file(collection, file_path, workspace_dir, collection_name)
+    
     # Re-index modified files
     if files_to_reindex:
         logger.info(f"📝 Re-indexing {len(files_to_reindex)} modified files")

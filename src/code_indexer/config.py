@@ -22,9 +22,9 @@ class IndexingConfig(BaseModel):
     )
     
     modification_check_interval: int = Field(
-        default=300,  # 5 minutes
-        ge=60,
-        description="How often to check for file modifications in seconds"
+        default=0,  # 0 = check every search, N = check every N minutes
+        ge=0,
+        description="How often to check for file modifications in minutes (0 = every search, N = every N minutes)"
     )
     
     allowed_extensions: Set[str] = Field(
@@ -64,7 +64,9 @@ class IndexingConfig(BaseModel):
             # Logs
             '*.log', 'logs',
             # Temporary files
-            'tmp', 'temp', '.tmp'
+            'tmp', 'temp', '.tmp',
+            # Hidden/config directories (anything starting with dot)
+            '.*'
         },
         description="Patterns to ignore during indexing"
     )
